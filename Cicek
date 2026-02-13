@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+  /* 1. GERÇEKÇİ ARKAPLAN (Yıldızlı Gece Fotoğrafı) */
+  body { 
+    margin: 0; 
+    overflow: hidden; 
+    background: url('https://images.unsplash.com/photo-1519681393798-3828fb4090bb?ixlib=rb-4.0.3&auto=format&fit=crop&w=1080&q=80') no-repeat center center fixed; 
+    background-size: cover;
+  }
+
+  /* 2. ÇİÇEKLERİN AYARI */
+  .cicek { 
+    position: absolute; 
+    font-size: 60px; /* Çiçekler büyük olsun */
+    pointer-events: none; 
+    filter: drop-shadow(0 0 15px rgba(255,255,255,0.4)); /* Hafif parlama efekti */
+    animation: süzülme 4s ease-out forwards; 
+  }
+
+  /* Çiçeklerin aşağıdan yukarı süzülme hareketi */
+  @keyframes süzülme {
+    0% { transform: translate(-50%, 0) scale(0.5) rotate(0deg); opacity: 0; bottom: 0; }
+    20% { opacity: 1; transform: translate(-50%, -100px) scale(1.2) rotate(20deg); }
+    100% { transform: translate(-50%, -600px) scale(1) rotate(-20deg); opacity: 0; }
+  }
+
+  /* Yazı Stili */
+  #not {
+    position: absolute; bottom: 10%; width: 100%; text-align: center;
+    color: white; font-family: 'Segoe UI', sans-serif; font-size: 22px; 
+    text-shadow: 0 0 10px black; font-weight: bold;
+    pointer-events: none;
+  }
+</style>
+</head>
+<body>
+
+<div id="not">Ekrana dokun, bahçemiz açsın... ❤️</div>
+
+<script>
+  // Telefonun kendi HD Emojilerini kullanıyoruz (En net bunlar görünür)
+  // Lale, Gül, Zambak (Lotus), Papatya, Kalp
+  const turler = ["🌷", "🌹", "🪷", "🌺", "❤️", "✨"];
+
+  document.addEventListener('click', function(e) { patlat(e.pageX, e.pageY); });
+  document.addEventListener('touchstart', function(e) { 
+    for(let i=0; i<e.touches.length; i++) {
+        patlat(e.touches[i].pageX, e.touches[i].pageY); 
+    }
+  });
+
+  function patlat(x, y) {
+    // Her dokunuşta 1 tane değil, 3-4 tane farklı çiçek çıksın
+    for(let i=0; i<3; i++){
+        let el = document.createElement("div");
+        el.className = "cicek";
+        
+        // Rastgele çiçek seç
+        el.innerText = turler[Math.floor(Math.random() * turler.length)];
+        
+        // Dokunulan yerin biraz sağına soluna dağılsın
+        let daginiklik = (Math.random() - 0.5) * 80;
+        
+        el.style.left = (x + daginiklik) + "px";
+        el.style.top = y + "px";
+        
+        // Rastgele bekleme süresi (hepsi aynı anda çıkmasın)
+        el.style.animationDelay = (i * 0.1) + "s";
+        
+        document.body.appendChild(el);
+
+        // 4 saniye sonra sil (Telefonu kastırmasın)
+        setTimeout(() => { el.remove(); }, 4000);
+    }
+  }
+</script>
+</body>
+</html>
